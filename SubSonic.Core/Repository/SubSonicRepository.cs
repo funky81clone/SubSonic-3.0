@@ -219,7 +219,7 @@ namespace SubSonic.Repository
                         try
                         {
                             var tbl = provider.FindOrCreateTable(typeof(T));
-                            var prop = item.GetType().GetProperty(tbl.PrimaryKey.Name);
+                            var prop = item.GetType().GetProperty(tbl.PrimaryKey.CleanName);
                             var settable = result.ChangeTypeTo(prop.PropertyType);
                             prop.SetValue(item, settable, null);
 

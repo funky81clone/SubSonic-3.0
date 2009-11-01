@@ -375,7 +375,7 @@ namespace SubSonic.Extensions
                 foreach (var dirty in ar.GetDirtyColumns())
                 {
                     if (!dirty.IsPrimaryKey && !dirty.IsReadOnly)
-                        query.Set(dirty.Name).EqualTo(settings[dirty.Name]);
+                        query.Set(dirty.Name).EqualTo(settings[dirty.CleanName]);
                 }
             }
             else
@@ -392,12 +392,12 @@ namespace SubSonic.Extensions
             }
 
             //add the PK constraint
-            Constraint c = new Constraint(ConstraintType.Where, tbl.PrimaryKey.Name)
-                               {
-                                   ParameterValue = settings[tbl.PrimaryKey.Name],
-                                   ParameterName = tbl.PrimaryKey.Name,
-                                   ConstructionFragment = tbl.PrimaryKey.Name
-                               };
+            Constraint c = new Constraint(ConstraintType.Where, tbl.PrimaryKey.CleanName)
+            {
+                ParameterValue = settings[tbl.PrimaryKey.CleanName],
+                ParameterName = tbl.PrimaryKey.CleanName,
+                ConstructionFragment = tbl.PrimaryKey.CleanName
+            };
             query.Constraints.Add(c);
 
             return query;
