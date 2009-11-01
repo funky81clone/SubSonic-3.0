@@ -73,5 +73,8 @@ namespace SubSonic.DataProviders
         DbConnection CreateConnection();
         void MigrateToDatabase<T>(Assembly assembly);
         void MigrateNamespaceToDatabase(string modelNamespace, Assembly assembly);
+
+        /** added by Reski **/
+        IList<T> ToList<T>(QueryCommand cmd,List<string> ColumnNames) where T : new();
     }
 }

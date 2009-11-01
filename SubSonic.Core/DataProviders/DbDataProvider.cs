@@ -240,13 +240,20 @@ namespace SubSonic.DataProviders
             return result;
         }
 
-        public IList<T> ToList<T>(QueryCommand qry) where T : new()
+        public IList<T> ToList<T>(QueryCommand qry,List<string> ColumnNames) where T : new()
         {
             List<T> result;
-            using(var rdr = ExecuteReader(qry))
-                result = rdr.ToList<T>();
+            using (var rdr = ExecuteReader(qry))
+                if (ColumnNames != null)
+                    result = rdr.ToList<T>(ColumnNames);
+                else
+                    result = rdr.ToList<T>();
 
             return result;
+        }
+        public IList<T> ToList<T>(QueryCommand qry) where T : new()
+        {
+            return ToList<T>(qry, null);
         }
 
         public string ParameterPrefix

@@ -127,6 +127,18 @@ namespace SubSonic.Repository
             return GetPaged(orderBy, pageIndex, pageSize);
         }
 
+        private List<string> GetColumnNames<T>()
+        {
+            var columnNames = new List<string>();
+            var properties = typeof(T).GetProperties().Skip(1);
+            foreach (var property in properties)
+            {
+                if (property.CanRead && property.CanWrite)
+                    columnNames.Add(property.Name);
+            }
+            return columnNames;
+        }
+
         /// <summary>
         /// Returns a server-side Paged List 
         /// </summary>
@@ -134,6 +146,8 @@ namespace SubSonic.Repository
         {
             int totalCount = _db.Select.From<T>().GetRecordCount(); //this.GetAll().Count();
             ITable tbl = GetTable();
+            
+            var columnNames = GetColumnNames<T>();
 
             var qry = _db.Select.From(tbl)
                 .Paged(pageIndex, pageSize);
@@ -143,7 +157,7 @@ namespace SubSonic.Repository
             else
                 qry.OrderDesc(sortBy.Replace(" desc", ""));
 
-            var list = qry.ExecuteTypedList<T>();
+            var list = qry.ExecuteTypedList<T>(columnNames);
 
             PagedList<T> result = new PagedList<T>(list, totalCount, pageIndex, pageSize);
 

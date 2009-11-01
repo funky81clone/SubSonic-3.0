@@ -1133,6 +1133,10 @@ namespace SubSonic.Query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        public virtual List<T> ExecuteTypedList<T>(List<string> ColumnNames) where T : new()
+        {
+            return _provider.ToList<T>(GetCommand(),ColumnNames) as List<T>;
+        }
         public virtual List<T> ExecuteTypedList<T>() where T : new()
         {
             return _provider.ToList<T>(GetCommand()) as List<T>;

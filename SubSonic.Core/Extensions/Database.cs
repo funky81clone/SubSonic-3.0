@@ -151,21 +151,6 @@ namespace SubSonic.Extensions
             PropertyInfo[] cachedProps = iType.GetProperties();
             FieldInfo[] cachedFields = iType.GetFields();
 
-            //List<string> columnNames = new List<string>();
-            //var columnObject = (iType.GetProperty("Columns")).GetValue(item, null);
-            //if (columnObject != null)
-            //{
-            //    foreach (IColumn column in (List<IColumn>)columnObject)
-            //    {
-            //        columnNames.Add(column.Name);
-            //    }
-            //}
-
-            //List<IColumn> columns = null;
-            //var propertyObject = iType.GetProperty("Columns");
-            //if (propertyObject != null)
-            //    columns = (List<IColumn>)(iType.GetProperty("Columns")).GetValue(item, null);
-
             PropertyInfo currentProp = null;
             FieldInfo currentField = null;
 
@@ -353,6 +338,10 @@ namespace SubSonic.Extensions
         /// </summary>
         public static List<T> ToList<T>(this IDataReader rdr) where T : new()
         {
+            return ToList<T>(rdr, null);
+        }
+        public static List<T> ToList<T>(this IDataReader rdr,List<string> ColumnNames) where T : new()
+        {
             List<T> result = new List<T>();
             Type iType = typeof(T);
 
@@ -360,7 +349,10 @@ namespace SubSonic.Extensions
             while (rdr.Read())
             {
                 T item = new T();
-                rdr.Load(item);
+                if (ColumnNames == null)
+                    rdr.Load(item);
+                else
+                    rdr.Load(item, ColumnNames);
                 result.Add(item);
             }
             return result;
