@@ -95,7 +95,25 @@ namespace SubSonic.Linq.Translation
             }
         }
     }
-
+    internal class ColumnNamedGatherer : DbExpressionVisitor
+    {
+        List<string> columnNames = new List<string>();
+        internal static List<string> Gather(Expression ex)
+        {
+            ColumnNamedGatherer gatherer = new ColumnNamedGatherer();
+            gatherer.Visit(ex);
+            return gatherer.columnNames;
+        }
+        protected override Expression VisitMemberInit(MemberInitExpression init)
+        {
+            //var ex = this.VisitBinding(init.Bindings[0]);
+            foreach (var binding in init.Bindings)
+            {
+                this.columnNames.Add(binding.Member.Name);
+            }
+            return init;
+        }
+    }
     internal class NamedValueGatherer : DbExpressionVisitor
     {
         HashSet<NamedValueExpression> namedValues = new HashSet<NamedValueExpression>();

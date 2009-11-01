@@ -290,7 +290,7 @@ namespace SubSonic.Linq.Structure
                     }
                     else
                     {
-                        result = reader.ToEnumerable<T>();
+                        result = reader.ToEnumerable<T>(query.ColumnNames);
 
                     }
                 }

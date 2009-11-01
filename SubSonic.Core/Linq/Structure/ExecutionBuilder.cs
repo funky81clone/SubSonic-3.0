@@ -214,6 +214,8 @@ namespace SubSonic.Linq.Structure
             LambdaExpression projector = Expression.Lambda(Visit(projection.Projector), reader);
             scope = saveScope;
 
+            List<string> columnNames = ColumnNamedGatherer.Gather(projector.Body);
+
             string commandText = policy.Mapping.Language.Format(projection.Source);
             ReadOnlyCollection<NamedValueExpression> namedValues = NamedValueGatherer.Gather(projection.Source);
             string[] names = namedValues.Select(v => v.Name).ToArray();
@@ -234,7 +236,7 @@ namespace SubSonic.Linq.Structure
                                                         GetConstructors()[0],
                                                     Expression.Constant(commandText),
                                                     Expression.Constant(names),
-                                                    projector
+                                                    projector, Expression.Constant(columnNames)
                                                     ),
                                                 Expression.NewArrayInit(typeof (object), values)
                 );

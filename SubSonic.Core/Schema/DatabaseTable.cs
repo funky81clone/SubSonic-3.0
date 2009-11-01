@@ -104,12 +104,12 @@ namespace SubSonic.Schema
 
         public IColumn GetColumn(string ColumnName)
         {
-            return Columns.Where(c => c.Name.Matches(ColumnName)).SingleOrDefault();
+            return Columns.Where(c => c.CleanName.Matches(ColumnName)).SingleOrDefault();
         }
 
         public IColumn GetColumnByPropertyName(string PropertyName)
         {
-            return Columns.SingleOrDefault(x => x.Name.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase));
+            return Columns.SingleOrDefault(x => x.CleanName.Equals(PropertyName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public string CreateSql
